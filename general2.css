@@ -1,0 +1,61 @@
+.container {
+  position: relative;
+  background-color:#0098ff
+
+}
+header {
+    background-color: #0098ff;
+    color:black;
+    top: 0;
+    left: 0;
+    height: 70px;
+    width: 100%;
+    text-align:center;
+    position: fixed
+}
+section {
+    text-align:center;
+    background: #33acff;
+    width:100%;
+    left:0;
+}
+footer {
+  text-align:center;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  height: 70px;
+  background-color: #0098ff;
+  width: 100%;
+}
+body {
+  margin-bottom: 120px;
+  margin-top: 120px;
+  padding:0 px;
+  background-color: #0098ff
+
+}
+.images{
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+}
+.miniatures{
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+}
+td.upper_line{ 
+    border-top:solid 1px black;
+    white-space: nowrap;
+}
+table.fraction{
+    text-align: center; vertical-align: middle;
+    margin-top:0.5em; margin-bottom:0.5em; line-height: 2em; 
+    margin:auto;
+    padding:0;
+    border-spacing:0;
+}
+td.nowrap{
+    white-space: nowrap;
+}

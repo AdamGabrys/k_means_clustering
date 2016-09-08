@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>K-Means Clustering</title>
+<meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
+    
+<link rel="stylesheet" type="text/css" href="general2.css">
+
+<script type="text/javascript" src="kmeans.js"></script>
+<script type="text/javascript">
+
+
+
+      function drawImageOrg(imageObj) {
+        var canvas = document.getElementById('myCanvasOrg');
+        var context = canvas.getContext('2d');
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        var imageX = 69;
+        var imageY = 50;
+
+        var imageWidth = imageObj.width;
+        var imageHeight = imageObj.height;
+        var red = new Array
+        var green = new Array
+        var blue = new Array
+        context.drawImage(imageObj, imageX, imageY);
+        context.font = "15px Helvetica"; 
+        context.fillText("oryginał",(imageX/2)+(imageWidth/2),(imageY/1.5))
+      }
+      function drawImageMod(imageObj) {
+        var k=document.getElementById("myText").value;
+        var canvas = document.getElementById('myCanvasMod');
+        var context = canvas.getContext('2d');
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        var imageX = 69;
+        var imageY = 50;
+        var imageWidth = imageObj.width;
+        var imageHeight = imageObj.height;
+        var red = new Array
+        var green = new Array
+        var blue = new Array
+        context.drawImage(imageObj, imageX, imageY);
+        var imageData = context.getImageData(imageX, imageY, imageWidth, imageHeight);
+        var data = imageData.data;
+
+        // iterate over all pixels
+        var j=0;
+        for(var i = 0, n = data.length; i < n; i += 4) {
+          red[j] = data[i];
+          green[j] = data[i + 1];
+          blue[j] = data[i + 2];
+          j++;
+        }
+        var txt ;
+        var vectors = new Array ;
+        for (var i = 0 ; i < red.length ; i++) {
+            txt+=red[i];
+            vectors[i] = [ red[i] , green[i],blue[i]] ;
+        }
+        var clusters = figue.kmeans(k, vectors) ;
+      
+
+        if (clusters) {
+            var j=0;
+            for(var i = 0, n = data.length; i < n; i += 4) {
+                var index = clusters.assignments[j] ;
+                data[i]=clusters.centroids[index][0];
+                data[i+1] = clusters.centroids[index][1];
+                data[i+2]=clusters.centroids[index][2]
+                j++;
+            }
+            context.putImageData( imageData, imageX, imageY);
+            context.font = "15px Helvetica"; 
+            context.fillText("sklastrowany",(imageX/2)+(imageWidth/2),(imageY/1.5))
+         } 
+  
+      }
+      var imageObj = new Image();
+         imageObj.onload = function() {
+             drawImageOrg(this);
+             drawImageMod(this);
+      };
+      imageObj.src = 'image.png';
+    function drawOnClick(){
+        drawImageOrg(imageObj);
+        drawImageMod(imageObj);
+    }
+    function codeAddress() {
+    document.getElementById("img1").onclick = function() {
+        imageObj.src="image.png";
+        drawOnClick();
+    }    ;
+    document.getElementById("img2").onclick = function() {
+        imageObj.src="swan.png";
+        drawOnClick();
+    };
+        document.getElementById("img3").onclick = function() {
+        imageObj.src="lisc.png";
+        drawOnClick();
+    };
+            document.getElementById("img4").onclick = function() {
+        imageObj.src="lena.png";
+        drawOnClick();
+    };
+            
+                document.getElementById("img5").onclick = function() {
+        imageObj.src="kunie.png";
+        drawOnClick();
+    };
+                    document.getElementById("img6").onclick = function() {
+        imageObj.src="dzwiedzie.png";
+        drawOnClick();
+    };}
+</script>
+</head>
+<body onload="codeAddress();" class="container">
+
+    <header>
+        <h1>K-Means Clusterring</h1>
+    </header>
+
+    <section>
+        <br><br>
+        <canvas id="myCanvasOrg" class="images" width="578" height="400"  ></canvas>
+        <canvas id="myCanvasMod" class="images" width="578" height="400" ></canvas>
+        <p>
+        Liczba klastrów: <input type="text" id="myText" value="2">
+        <br><br>
+        <button onclick="drawOnClick()">Klastruj</button>
+        </p>
+        <p id="myp" class='miniatures'>
+            Wybierz zdjęcie:
+            <br>
+            <br>
+            <img src="image.png" id="img1" width="180" height="120" alt="img1">
+            <img src="swan.png" id="img2" width="180" height="120" alt="img2">
+            <img src="lisc.png" id="img3" width="180" height="120" alt="img3">
+            <img src="lena.png" id="img4" width="180" height="120" alt="img4">
+            <img src="kunie.png" id="img5" width="180" height="120" alt="img5">
+            <img src="dzwiedzie.png" id="img6" width="180" height="120" alt="img6">
+        </p>
+                <h2>
+            Aplikacja
+        </h2>
+        
+        <p>
+            Aplikacja zbudowana w języku java script zaprezentowana na tej stronie<br>
+            realizuje metodę k-means dla kilku przykładowych zdjęć. Wybrane zdjęcie  <br>
+            dzielone jest na grupy na podstawie wartości RGB pixeli. W efekcie <br>
+            sklastrowane zdjęcie przedstawia ten sam skomresowany obraz wyrażony <br>
+            przez liczbę kolorów odpowiadającą liczbie klastrów.<br>
+        </p>
+        <h2>
+            KLASTROWANIE
+        </h2>
+        <p>
+            Klastrowanie czyli analiza skupień jest metodą tzw. klasyfikacji bez nadzoru.<br>
+            Jest to metoda dokonująca grupowania elementów we względnie jednorodne klasy.<br>
+            Podstawą grupowania w większości algorytmów jest podobieństwo pomiędzy<br>
+            elementami – wyrażone przy pomocy funkcji podobieństwa.<br>
+            <br>
+            Celem klastryzacji jest znalezienie poprzez grupowanie dyskretnej struktury danych,<br>
+            oraz dokonanie ich uogólniania. Grupowanie polega na wyodrębnianiu grup (klas, podzbiorów).<br>
+            <br>
+            Klastryzacja danych jest bardzo szeroko stosowana ze względu na swój fundamentalny charakter.<br>
+            Umożliwia pogrupowania zbioru danych względem preferowanych przez nas cech, co daje sposobność<br>
+            dalszej dopasowanej analizy.      
+        </p>
+        <h2>
+            ZASTOSOWANIA
+        </h2>
+        
+            <ul>
+            <li>medycyna: 
+                grupowania chorób, 
+                grupowanie objaw</li>
+            <li>text mining: 
+                grupowanie podobnych dokumentów</li>
+            <li>data mining: 
+                podział klientów na pewne podgrupy</li>
+            <li>wyszukiwanie informacji: 
+                grupowanie wyników z wyszukiwarek</li>
+            <li>segmentacja obrazu: 
+                podział obrazu na regiony homogeniczne pod względem pewnej własności obrazu (kolor, tekstura, intensywność)<br><br>
+            <li>grupowanie zadań w problemie harmonogramowania</li>
+            </ul>
+        
+        <h2>
+            METODA K-CENTROIDÓW<br>
+            (k-means, MacQueen, 1967)
+        </h2>
+
+            Danych jest N punktów: x<sub>1</sub>, x<sub>2</sub>, ..., x<sub>N</sub> w przestrzeni R<sup>n</sup>, oraz parametr k, określający liczbe poszukiwanych klastrów.<br>
+            Szukamy k punktów c<sub>1</sub>, ..., c<sub>k</sub> zwanych środkami lub centroidami, będących optymalnymi punktami ze względu na funkcję:<br>
+        
+<table class="fraction">
+    <tr>
+        <td rowspan="3" class="nowrap">
+            <i>F</i>(<i>c</i><sub>1</sub>, ..., <i>c</i><sub>k</sub>) =  
+        </td>
+        <td class="nowrap">
+            <sub>N</sub>
+        </td>
+        <td rowspan="3" class="nowrap">
+            min<sub>j=1..k</sub> d(x<sub>i</sub>, c<sub>j</sub>)
+        </td>
+    </tr>
+    <tr>
+        <td>
+            &Sigma;
+        </td>
+    </tr>
+    <tr>
+        <td class="nowrap">
+            <sup>i=1</sup>
+        </td>
+    </tr>
+</table>
+   <br><ul>
+     <li>d(x<sub>i</sub>,c<sub>j</sub>), jest funkcją odległości punktu x<sub>i</sub> od centroidu c<sub>j</sub></li>
+        </ul>
+
+        
+        <h2>
+            ALGORYTM
+        </h2>
+
+            Znaleźć k środków tak, aby suma
+odległości punktów do
+najbliższego centroida była
+minimalna.
+            <br><br><br>
+        <ul>
+<li>1. Wybierz losowo
+dowolnych k centrum klastrów</li>
+       
+<li>2. Przydziel każdy obiekt
+do najbliższego centroida.</li>
+        
+<li>3. Wyznacz nowy układ
+centroidów</li>
+  
+<li>4. Powtórz krok 2 dopóty,
+poprawa jakości będzie
+mała, lub osiągniesz limit iteracji.</li>
+        </ul>
+        <br><br><br>
+        <img src="exampl.jpg" id="ex" alt="ex"><br><br><br>
+            
+
+        <h2>Wyznaczanie nowego układu centroidów</h2>
+
+Nowy centroid jest środkiem ciężkości
+powstającego (w poprzednim przebiegu algorytmu)
+klastra.<br>
+Współrzędne nowego centroida: <br><br>
+
+<table class="fraction">
+    <tbody>
+    <tr>
+        <td class="nowrap" rowspan="2" >
+            <i>c</i>(<i>x</i><sub>i</sub>) =   
+        </td>
+        <td class="nowrap">
+            <i>p</i><sub>1</sub>(<i>x</i><sub>i</sub>) + ... + <i>p</i><sub>b</sub>(<i>x</i><sub>i</sub>)
+        </td>
+    </tr>
+    <tr>
+        <td class="upper_line">
+            b
+        </td>
+    </tr>
+    </tbody>
+</table>
+    <ul>
+        <li>p<sub>1</sub>, p<sub>2</sub>, ..., p<sub>b</sub> - punkty należące do klastra.</li>
+        <li>c(x<sub>i</sub>), p<sub>1</sub>(x<sub>i</sub>), ..., p<sub>b</sub>(x<sub>i</sub>)– i-ta współrzędna.
+     
+    </ul>
+
+    </section>
+
+    <footer>
+        <p>Adam Gabryś    Informatyka Stosowana</p>
+        <p>Wydział Fizyki i Informatyki Stosowanej     AGH</p>
+    </footer>
+
+
+</body>
+</html>
